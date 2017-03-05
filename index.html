@@ -1,0 +1,53 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="custom.css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="form-group">
+            <label for="n">n = <input type="number" id="n" min="1" max="16" value="3">
+            </label>
+        </div>
+        <div id="nfGroup" class="form-group">
+            <label for="nf">nf = <input type="number" id="nf" min="0" max="256" value="0">
+            </label>
+        </div>
+        <button id="findF" class="btn btn-primary btn-sm">Find f</button>
+    </div>
+
+    <div id="fGroup" class="row">
+        <table title="f" class="table table-bordered table-condensed">
+            <tbody>
+            <tr></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="methodsGroup" class="row">
+        <div class="radio">
+            <label><input type="radio" name="method" value="pdnf" checked> PDNF</label>
+        </div>
+        <div class="radio">
+            <label><input type="radio" name="method" value="other"> Other</label>
+        </div>
+        <button id="findPolynomial" class="btn btn-primary btn-sm">Find polynomial</button>
+        <pre id="result" class="well">
+
+        </pre>
+    </div>
+</div>
+
+
+<script>
+    if (typeof module === 'object') {
+        window.module = module;
+        module = undefined;
+    }
+</script>
+<script src="node_modules/jquery/dist/jquery.js"></script>
+<script src="polynomials.js" type="text/javascript"></script>
+<script>if (window.module) module = window.module;</script>
+</body>
+</html>
