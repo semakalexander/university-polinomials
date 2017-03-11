@@ -34,6 +34,7 @@ $nf.on('keyup change', (e) => {
     if (nf > $input.attr('max')) {
         $input.val($input.attr('max'));
     }
+    $('#findF').click();
 });
 
 $('#findF').on('click', () => {
@@ -43,14 +44,14 @@ $('#findF').on('click', () => {
     $fGroup.show();
     let f = byteString(nf, n).split('');
     let template = '';
+    let cssClass = '';
     for (let i = 0; i < f.length; i++) {
-        template += '<td>' + f[i] + '</td>';
+        cssClass = +f[i] ? 'alert alert-success' : 'alert alert-danger';
+        template += '<td class="' + cssClass + '">' + f[i] + '</td>';
     }
-    $fGroup.find('tr').html('wait...');
-    setTimeout(() => {
-        $('tr').html(template);
-        $('#methodsGroup').show();
-    }, 350);
+    // $fGroup.find('tr').html('wait...');
+    $('tr').html(template);
+    $('#methodsGroup').show();
 });
 
 $('#findPolynomial').on('click', () => {
@@ -66,22 +67,25 @@ $('#findPolynomial').on('click', () => {
 
 function getPdnf(nf, n) {
     const f = byteString(nf, n).split('');
-    let pdnf = '';
+    let p = new Polynomial();
     for (let i = 0; i < f.length; i++) {
         if (+f[i]) {
             const xyz = xyzString(i, n).split('');
-            let val = '(';
+            p.push('(');
             for (let j = 0; j < xyz.length; j++) {
-                val += +xyz[j] ? 'x' + (j + 1) : '!x' + (j + 1);
+                let index = j + 1;
+                let tmpVal = +xyz[j] ? 'x' : '!x';
+                p.push(tmpVal, index);
                 if (j != xyz.length - 1) {
-                    val += ' &#652; ';
+                    p.push('^');
                 }
             }
-            val += ')';
-            pdnf += val + ' v ';
+            p.push(')');
+            p.push('v');
         }
     }
-    return pdnf.slice(0, -3);
+    p.coefs.pop();
+    return p.toString();
 }
 
 function byteString(nf, n) {
@@ -101,4 +105,105 @@ function xyzString(val, n) {
         zeros += '0';
     }
     return (zeros + val.toString(2)).slice(-n);
+}
+
+// types:
+// 0: входить як !х
+// 1: входить як x
+// 2: ^
+// 3: v
+// 4: (
+// 5: )
+// {type: number of type,
+//  index: number}
+// index is required for 0 and 1
+// f.ex. (x1 v !x2) ^ x3
+// [{type:4}, {type:1, index:1}, {type:3}, {type:0, index:2}, {type: 5}, {type:2}, {type: 1, index: 3}]
+function Polynomial(coefs) {
+    this.coefs = coefs || [];
+
+    let self = this;
+
+    this.push = (val, index) => {
+        switch (val) {
+            case '!x':
+                if (!index) {
+                    return false;
+                }
+                self.coefs.push({
+                    type: 0,
+                    index: index
+                });
+                break;
+            case 'x':
+                if (!index) {
+                    return false;
+                }
+                self.coefs.push({
+                    type: 1,
+                    index: index
+                });
+                break;
+            case '^':
+                self.coefs.push({type: 2});
+                break;
+            case 'v':
+                self.coefs.push({type: 3});
+                break;
+            case '(':
+                self.coefs.push({type: 4});
+                break;
+            case ')':
+                self.coefs.push({type: 5});
+                break;
+            default:
+                return false;
+
+        }
+        return true;
+    };
+
+    this.toString = () => {
+        let result = '';
+        this.coefs.forEach((val) => {
+            switch (val.type) {
+                case 0:
+                    result += '!x' + val.index;
+                    break;
+                case 1:
+                    result += 'x' + val.index;
+                    break;
+                case 2:
+                    result += ' &#652; ';
+                    break;
+                case 3:
+                    result += ' v ';
+                    break;
+                case 4:
+                    result += '(';
+                    break;
+                case 5:
+                    result += ')';
+                    break;
+                default:
+                    break;
+            }
+        });
+        return result;
+    };
+
+    return this;
+}
+function PolynomialZhegalkina() {
+    this.coefs = []
+}
+
+
+function toZheg(pol) {
+    let coefs = pol.coefs;
+    for (let i = 0; i < coefs.length; i++) {
+        if (coefs[i] === xyzString()) {
+
+        }
+    }
 }

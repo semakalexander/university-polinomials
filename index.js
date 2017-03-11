@@ -8,8 +8,8 @@ let mainWindow;
 
 app.on('ready', () => {
     mainWindow = new BrowserWindow({
-        width:640,
-        height:640-256
+        width:896,
+        height:522
     });
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, 'index.html'),
